@@ -42,12 +42,11 @@
         }
       }
 
-      const geolocation = navigator.geolocation();
-      if (!geolocation) {
-        document.getElementById("geolocation").innerText = `Geolocation ${geolocation}`;
+      if (!navigator.geolocation) {
+        document.getElementById("geolocation").innerText = `Geolocation ${navigator.geolocation}`;
         return;
       }
-      const currentPosition = await geolocation.currentPosition();
+      const currentPosition = await navigator.geolocation.currentPosition();
       document.getElementById("geolocation").innerText = ```
         latitude: ${currentPosition.coords.latitude}<br>
         longitude: ${currentPosition.coords.longitude}<br>
