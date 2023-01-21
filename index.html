@@ -34,6 +34,9 @@
           return;
         }
       }
+
+      window.addEventListener("deviceorientation", handleDeviceOrientation, true);
+
       if (Geolocation.requestPermission) {
         const geolocationResponse = await Geolocation.requestPermission();
         if (geolocationResponse !== "granted") {
@@ -41,18 +44,19 @@
           return;
         }
       }
-
       if (!navigator.geolocation) {
         document.getElementById("geolocation").innerText = `Geolocation ${navigator.geolocation}`;
         return;
       }
-      const currentPosition = await navigator.geolocation.getCurrentPosition();
+
+      const currentPosition = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
       document.getElementById("geolocation").innerText = ```
         latitude: ${currentPosition.coords.latitude}<br>
         longitude: ${currentPosition.coords.longitude}<br>
         accuracy: ${currentPosition.coords.accuracy}<br>
       ```;
-      window.addEventListener("deviceorientation", handleDeviceOrientation, true);
     }
   </script>
 </body>
