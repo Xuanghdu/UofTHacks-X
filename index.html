@@ -37,7 +37,11 @@
         }
       }
 
-      window.addEventListener("deviceorientation", handleDeviceOrientation, true);
+      if ("deviceorientationabsolute" in window) {
+        window.addEventListener("deviceorientationabsolute", handleDeviceOrientation, true);
+      } else {
+        window.addEventListener("deviceorientation", handleDeviceOrientation, true);
+      }
 
       if (typeof Geolocation !== 'undefined' && typeof Geolocation.requestPermission === 'function') {
         const geolocationResponse = await Geolocation.requestPermission();
