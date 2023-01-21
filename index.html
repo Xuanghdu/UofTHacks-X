@@ -15,7 +15,14 @@
 
   <script>
     function handleDeviceOrientation(event) {
-      document.getElementById("text").innerText = event;
+      document.getElementById("text").innerText = ```
+      absolute: ${event.absolute}<br>
+      alpha: ${event.alpha}<br>
+      beta: ${event.beta}<br>
+      gamma: ${event.gamma}<br>
+      webkitCompassHeading: ${event.webkitCompassHeading}<br>
+      webkitCompassAccuracy: ${event.webkitCompassAccuracy}
+      ```
     }
 
     async function main() {
