@@ -37,7 +37,7 @@
         }
       }
 
-      if ("deviceorientationabsolute" in window) {
+      if ("ondeviceorientationabsolute" in window) {
         window.addEventListener("deviceorientationabsolute", handleDeviceOrientation, true);
       } else {
         window.addEventListener("deviceorientation", handleDeviceOrientation, true);
