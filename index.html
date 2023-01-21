@@ -11,12 +11,15 @@
 
 <body>
   <button onclick="main()">Start</button>
+  <h1>Device Orientation</h1>
   <p id="device-orientation"></p>
+  <h1>Geolocation</h1>
   <p id="geolocation"></p>
 
   <script>
     function handleDeviceOrientation(event) {
-      document.getElementById("device-orientation").innerText =
+      console.log("device orientation", event);
+      document.getElementById("device-orientation").innerHTML =
         `absolute: ${event.absolute}<br>` +
         `alpha: ${event.alpha}<br>` +
         `beta: ${event.beta}<br>` +
@@ -51,10 +54,12 @@
       const currentPosition = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
-      document.getElementById("geolocation").innerText =
+      console.log("position", currentPosition);
+      console.log("coords", currentPosition.coords);
+      document.getElementById("geolocation").innerHTML =
         `latitude: ${currentPosition.coords.latitude}<br>` +
         `longitude: ${currentPosition.coords.longitude}<br>` +
-        `accuracy: ${currentPosition.coords.accuracy}<br>`;
+        `accuracy: ${currentPosition.coords.accuracy}`;
     }
   </script>
 </body>
