@@ -1,15 +1,17 @@
+<!-- reference: https://www.w3schools.com/graphics/canvas_clock.asp -->
+
 <!DOCTYPE html>
 <html lang="en-US">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width" />
-
-  <title>TODO Title</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-</body>
-
+  <title>UofTHacks X</title>
+  <link rel="stylesheet" href="style.css" />
+  <body>
+    <canvas id="canvas" style="background-color: #333"> </canvas>
+    <script src="clock.js"></script>
+    <div>
+      <!-- checkbox that will call a function -->
+      <input type="checkbox" id="show"/>
+      <label for="show">Show Compass</label>
+    </div>
+    <script src="compass.js"></script>
+  </body>
 </html>
