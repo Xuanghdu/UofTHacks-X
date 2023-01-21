@@ -11,27 +11,48 @@
 
 <body>
   <button onclick="main()">Start</button>
-  <p id="text"></p>
+  <p id="device-orientation"></p>
+  <p id="geolocation"></p>
 
   <script>
     function handleDeviceOrientation(event) {
-      document.getElementById("text").innerText = ```
+      document.getElementById("device-orientation").innerText = ```
       absolute: ${event.absolute}<br>
       alpha: ${event.alpha}<br>
       beta: ${event.beta}<br>
       gamma: ${event.gamma}<br>
       webkitCompassHeading: ${event.webkitCompassHeading}<br>
       webkitCompassAccuracy: ${event.webkitCompassAccuracy}
-      ```
+      ```;
     }
 
     async function main() {
       if (DeviceOrientationEvent.requestPermission) {
-        const response = await DeviceOrientationEvent.requestPermission();
-        if (response !== "granted") {
+        const deviceOrientationResponse = await DeviceOrientationEvent.requestPermission();
+        if (deviceOrientationResponse !== "granted") {
+          document.getElementById("device-orientation").innerText = `DeviceOrientation ${deviceOrientationResponse}`;
           return;
         }
       }
+      if (Geolocation.requestPermission) {
+        const geolocationResponse = await Geolocation.requestPermission();
+        if (geolocationResponse !== "granted") {
+          document.getElementById("geolocation").innerText = `Geolocation ${geolocationResponse}`;
+          return;
+        }
+      }
+
+      const geolocation = navigator.geolocation();
+      if (!geolocation) {
+        document.getElementById("geolocation").innerText = `Geolocation ${geolocation}`;
+        return;
+      }
+      const currentPosition = await geolocation.currentPosition();
+      document.getElementById("geolocation").innerText = ```
+        latitude: ${currentPosition.coords.latitude}<br>
+        longitude: ${currentPosition.coords.longitude}<br>
+        accuracy: ${currentPosition.coords.accuracy}<br>
+      ```;
       window.addEventListener("deviceorientation", handleDeviceOrientation, true);
     }
   </script>
