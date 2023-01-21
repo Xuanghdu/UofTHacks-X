@@ -16,18 +16,17 @@
 
   <script>
     function handleDeviceOrientation(event) {
-      document.getElementById("device-orientation").innerText = ```
-      absolute: ${event.absolute}<br>
-      alpha: ${event.alpha}<br>
-      beta: ${event.beta}<br>
-      gamma: ${event.gamma}<br>
-      webkitCompassHeading: ${event.webkitCompassHeading}<br>
-      webkitCompassAccuracy: ${event.webkitCompassAccuracy}
-      ```;
+      document.getElementById("device-orientation").innerText =
+        `absolute: ${event.absolute}<br>` +
+        `alpha: ${event.alpha}<br>` +
+        `beta: ${event.beta}<br>` +
+        `gamma: ${event.gamma}<br>` +
+        `webkitCompassHeading: ${event.webkitCompassHeading}<br>` +
+        `webkitCompassAccuracy: ${event.webkitCompassAccuracy}`;
     }
 
     async function main() {
-      if (DeviceOrientationEvent.requestPermission) {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
         const deviceOrientationResponse = await DeviceOrientationEvent.requestPermission();
         if (deviceOrientationResponse !== "granted") {
           document.getElementById("device-orientation").innerText = `DeviceOrientation ${deviceOrientationResponse}`;
@@ -37,7 +36,7 @@
 
       window.addEventListener("deviceorientation", handleDeviceOrientation, true);
 
-      if (Geolocation.requestPermission) {
+      if (typeof Geolocation !== 'undefined' && typeof Geolocation.requestPermission === 'function') {
         const geolocationResponse = await Geolocation.requestPermission();
         if (geolocationResponse !== "granted") {
           document.getElementById("geolocation").innerText = `Geolocation ${geolocationResponse}`;
@@ -52,11 +51,10 @@
       const currentPosition = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
-      document.getElementById("geolocation").innerText = ```
-        latitude: ${currentPosition.coords.latitude}<br>
-        longitude: ${currentPosition.coords.longitude}<br>
-        accuracy: ${currentPosition.coords.accuracy}<br>
-      ```;
+      document.getElementById("geolocation").innerText =
+        `latitude: ${currentPosition.coords.latitude}<br>` +
+        `longitude: ${currentPosition.coords.longitude}<br>` +
+        `accuracy: ${currentPosition.coords.accuracy}<br>`;
     }
   </script>
 </body>
