@@ -6,7 +6,7 @@ ctx.canvas.height = dim;
 var radius = dim / 2;
 ctx.translate(radius, radius);
 radius = radius * 0.9;
-setInterval(drawClock, 1000);
+setInterval(drawClock, 100);
 
 function drawClock() {
   drawFace(ctx, radius);
