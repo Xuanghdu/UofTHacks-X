@@ -11,21 +11,21 @@
 
 <body>
   <button onclick="main()">Start</button>
+  <p id="text"></p>
 
   <script>
-    console.log("a");
+    function handleDeviceOrientation(event) {
+      document.getElementById("text").innerText = event;
+    }
 
     async function main() {
-      console.log("b");
-      const response = await DeviceOrientationEvent.requestPermission();
-      console.log("c");
-      if (response !== "granted") {
-        console.log("d", response);
-        return;
+      if (DeviceOrientationEvent.requestPermission) {
+        const response = await DeviceOrientationEvent.requestPermission();
+        if (response !== "granted") {
+          return;
+        }
       }
-      console.log("e");
-      window.addEventListener("deviceorientation", console.log, true);
-      console.log("f");
+      window.addEventListener("deviceorientation", handleDeviceOrientation, true);
     }
   </script>
 </body>
