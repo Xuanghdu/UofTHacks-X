@@ -18,7 +18,6 @@
 
   <script>
     function handleDeviceOrientation(event) {
-      console.log("device orientation", event);
       document.getElementById("device-orientation").innerHTML =
         `absolute: ${event.absolute}<br>` +
         `alpha: ${event.alpha}<br>` +
@@ -58,8 +57,6 @@
       const currentPosition = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
-      console.log("position", currentPosition);
-      console.log("coords", currentPosition.coords);
       document.getElementById("geolocation").innerHTML =
         `latitude: ${currentPosition.coords.latitude}<br>` +
         `longitude: ${currentPosition.coords.longitude}<br>` +
