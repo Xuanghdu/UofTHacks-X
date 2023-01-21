@@ -10,6 +10,24 @@
 </head>
 
 <body>
+  <button onclick="main()">Start</button>
+
+  <script>
+    console.log("a");
+
+    async function main() {
+      console.log("b");
+      const response = await DeviceOrientationEvent.requestPermission();
+      console.log("c");
+      if (response !== "granted") {
+        console.log("d", response);
+        return;
+      }
+      console.log("e");
+      window.addEventListener("deviceorientation", console.log, true);
+      console.log("f");
+    }
+  </script>
 </body>
 
 </html>
