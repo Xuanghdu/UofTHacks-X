@@ -1,4 +1,5 @@
 const topContainer = document.getElementById("top-container");
+const splashStartButton = document.getElementById("splash-start-button");
 const previousButton = document.getElementById("previous-button");
 const nextButton = document.getElementById("next-button");
 
@@ -14,6 +15,69 @@ const mainPageIDs = ["introduction-page"].concat(clockPageIDs, ["thank-you-page"
 const allPageIDs = ["splash-page"].concat(mainPageIDs);
 
 let currentPageName = "splash-page";
+
+function disableButton(button) {
+  button.setAttribute("onclick", null);
+  button.classList.add("button-disabled");
+}
+
+/**
+ * Starting from the x-axis of the phone, in the clockwise direction, the orientation of the north direction in radians.
+ */
+let orientationWrtXAxis = null;
+
+/**
+ * The following 3 properties of the object are of interest.
+ * - altitude
+ * - latitude
+ * - longitude
+ */
+let geolocationCoords = null;
+
+function handleDeviceOrientation(event) {
+  let orientationInDegrees;
+  if (event.hasOwnProperty("webkitCompassHeading")) {
+    orientationInDegrees = 270 - event.webkitCompassHeading;
+  } else {
+    orientationInDegrees = event.alpha - 90;
+  }
+  if (orientationInDegrees < 0) {
+    orientationInDegrees += 360;
+  }
+  orientationWrtXAxis = orientationInDegrees / (180 / Math.PI);
+}
+
+async function onSplashStartButtonClicked() {
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    const deviceOrientationResponse = await DeviceOrientationEvent.requestPermission();
+    if (deviceOrientationResponse !== "granted") {
+      disableButton(splashStartButton);
+      return;
+    }
+  }
+  if ("ondeviceorientationabsolute" in window) {
+    window.addEventListener("deviceorientationabsolute", handleDeviceOrientation, true);
+  } else {
+    window.addEventListener("deviceorientation", handleDeviceOrientation, true);
+  }
+
+  if (typeof Geolocation !== 'undefined' && typeof Geolocation.requestPermission === 'function') {
+    const geolocationResponse = await Geolocation.requestPermission();
+    if (geolocationResponse !== "granted") {
+      disableButton(splashStartButton);
+      return;
+    }
+  }
+  if (!navigator.geolocation) {
+    disableButton(splashStartButton);
+    return;
+  }
+  const geolocation = await new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+  geolocationCoords = geolocation.coords;
+  goToPageWithID('introduction-page');
+}
 
 function goToPageWithID(pageID) {
   topContainer.classList.remove("at-clock-pages", ...allPageIDs.map(id => "at-" + id));
