@@ -179,6 +179,12 @@ function clock() {
       // draw the line bisecting 12 o'clock and hour hand
       drawHand(ctx, hour / 2, radius, radius * 0.02, "square");
     }
+
+    if (currentPageName === "real-south-direction-page") {
+      [compass_sun_direction, compass_local_time, compass_true] =
+        direction(hour);
+      drawHand(ctx, compass_true, radius, radius * 0.02, "square");
+    }
   }
 }
 
