@@ -37,9 +37,13 @@ let geolocationCoords = null;
 function handleDeviceOrientation(event) {
   let orientationInDegrees;
   if (event.hasOwnProperty("webkitCompassHeading")) {
-    orientationInDegrees = 270 - event.webkitCompassHeading;
+    // 360 is relative to the y-axis of the phone (12 o'clock)
+    // 270 is relative to the x-axis of the phone (3 o'clock)
+    orientationInDegrees = 360 - event.webkitCompassHeading;
   } else {
-    orientationInDegrees = event.alpha - 90;
+    // 0 is relative to the y-axis of the phone (12 o'clock)
+    // 90 is relative to the x-axis of the phone (3 o'clock)
+    orientationInDegrees = event.alpha - 0;
   }
   if (orientationInDegrees < 0) {
     orientationInDegrees += 360;

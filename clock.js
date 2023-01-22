@@ -7,7 +7,6 @@ var radius = dim / 2;
 ctx.translate(radius, radius);
 radius = radius * 0.9;
 
-
 var now_1 = -1;
 var second_1;
 var flag_1 = false;
@@ -31,17 +30,13 @@ function clear() {
 
   now_3 = -1;
   flag_3 = false;
-
-  direction();
 }
 
 function draw() {
-  // let [hour, minute, second] = calcTime();
-  // compass_measured = hour/2;
-  compass_measured = 0;
-  compass_sun_direction = Math.PI / 2;
-  compass_local_time = Math.PI;
-  compass_true = (3 * Math.PI) / 2;
+  let [hour, minute, second] = calcTime();
+  compass_measured = hour/2;
+
+  [compass_sun_direction, compass_local_time, compass_true] = direction(hour);
 
   if (!clockPageIDs.slice(-3).includes(currentPageName)) {
     clock();
@@ -59,7 +54,11 @@ function draw() {
       second_2 = now_2.getSeconds() + now_2.getMilliseconds() / 1000;
     }
     requestAnimationFrame(() => {
-      flag_2 = explainError(second_2, compass_sun_direction, compass_local_time);
+      flag_2 = explainError(
+        second_2,
+        compass_sun_direction,
+        compass_local_time
+      );
     });
   } else if (currentPageName === "error-system-error-page" && !flag_3) {
     if (now_3 === -1) {
@@ -178,7 +177,7 @@ function drawHand(ctx, pos, length, width, lineCap = "round", dotted = false) {
 }
 
 function explainError(old_second, compass1, compass2, speed = 1 / 6) {
-  console.log(old_second, compass1, compass2)
+  console.log(old_second, compass1, compass2);
   ctx.clearRect(-dim / 2, -dim / 2, dim, dim);
   drawClockFaceWithNumber();
 
