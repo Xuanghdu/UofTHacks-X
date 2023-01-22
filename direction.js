@@ -1,4 +1,4 @@
-if (currentPageName !== "splash-page") {
+function direction() {
 
 console.log(geolocationCoords)
 

@@ -31,6 +31,8 @@ function clear() {
 
   now_3 = -1;
   flag_3 = false;
+
+  direction();
 }
 
 function draw() {
