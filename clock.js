@@ -7,20 +7,68 @@ var radius = dim / 2;
 ctx.translate(radius, radius);
 radius = radius * 0.9;
 
-// animation = true;
-animation = false;
 
-draw(animation);
+var now_1 = -1;
+var second_1;
+var flag_1 = false;
 
-function draw(animation = false) {
-  drawClockFaceWithNumber();
-  if (animation) {
-    let [hour, minute, second] = calcTime();
-    // explainErrors(hour/2);
-    explainErrors(0.06, Math.PI / 2 - 0.08, Math.PI, (Math.PI / 2) * 3);
-  } else {
-    window.requestAnimationFrame(clock);
+var now_2 = -1;
+var second_2;
+var flag_2 = false;
+
+var now_3 = -1;
+var second_3;
+var flag_3 = false;
+
+window.requestAnimationFrame(draw);
+
+function clear() {
+  now_1 = -1;
+  flag_1 = false;
+
+  now_2 = -1;
+  flag_2 = false;
+
+  now_3 = -1;
+  flag_3 = false;
+}
+
+function draw() {
+  // let [hour, minute, second] = calcTime();
+  // compass_measured = hour/2;
+  compass_measured = 0;
+  compass_sun_direction = Math.PI / 2;
+  compass_local_time = Math.PI;
+  compass_true = (3 * Math.PI) / 2;
+
+  if (!clockPageIDs.slice(-3).includes(currentPageName)) {
+    clock();
+  } else if (currentPageName === "error-sun-direction-page" && !flag_1) {
+    if (now_1 === -1) {
+      now_1 = new Date();
+      second_1 = now_1.getSeconds() + now_1.getMilliseconds() / 1000;
+    }
+    requestAnimationFrame(() => {
+      flag_1 = explainError(second_1, compass_measured, compass_sun_direction);
+    });
+  } else if (currentPageName === "error-local-time-page" && !flag_2) {
+    if (now_2 === -1) {
+      now_2 = new Date();
+      second_2 = now_2.getSeconds() + now_2.getMilliseconds() / 1000;
+    }
+    requestAnimationFrame(() => {
+      flag_2 = explainError(second_2, compass_sun_direction, compass_local_time);
+    });
+  } else if (currentPageName === "error-system-error-page" && !flag_3) {
+    if (now_3 === -1) {
+      now_3 = new Date();
+      second_3 = now_3.getSeconds() + now_3.getMilliseconds() / 1000;
+    }
+    requestAnimationFrame(() => {
+      flag_3 = explainError(second_3, compass_local_time, compass_true);
+    });
   }
+  window.requestAnimationFrame(draw);
 }
 
 function calcTime() {
@@ -96,18 +144,16 @@ function clock() {
 
   drawTime(ctx, radius, hour, minute, second);
 
-  window.requestAnimationFrame(clock);
-
   function drawTime(ctx, radius, hour, minute, second) {
     drawHand(ctx, hour, radius * 0.5, radius * 0.07);
     drawHand(ctx, minute, radius * 0.8, radius * 0.07);
     drawHand(ctx, second, radius * 0.9, radius * 0.02);
 
-    if (clockPageIDs.slice(1).includes(currentPageName)) {
+    if (clockPageIDs.slice(1, -3).includes(currentPageName)) {
       // draw the dotted line to 12 o'clock
       drawHand(ctx, 0, radius, radius * 0.01, "square", true);
       // draw the line bisecting 12 o'clock and hour hand
-      drawHand(ctx, hour / 2, radius * 2, radius * 0.02, "square");
+      drawHand(ctx, hour / 2, radius, radius * 0.02, "square");
     }
   }
 }
@@ -129,30 +175,8 @@ function drawHand(ctx, pos, length, width, lineCap = "round", dotted = false) {
   }
 }
 
-function explainErrors(
-  compass_measured,
-  compass_sun_direction,
-  compass_local_time,
-  compass_true
-) {
-  var now = new Date();
-  var second = now.getSeconds() + now.getMilliseconds() / 1000;
-
-  // drawClockFaceWithNumber();
-  requestAnimationFrame(() => {
-    explainError(second, compass_measured, compass_sun_direction);
-  });
-  // // drawClockFaceWithNumber();
-  // requestAnimationFrame(() => {
-  //   explainError(millisecond, compass_sun_direction, compass_local_time);
-  // });
-  // // drawClockFaceWithNumber();
-  // requestAnimationFrame(() => {
-  //   explainError(millisecond, compass_local_time, compass_true);
-  // });
-}
-
 function explainError(old_second, compass1, compass2, speed = 1 / 6) {
+  console.log(old_second, compass1, compass2)
   ctx.clearRect(-dim / 2, -dim / 2, dim, dim);
   drawClockFaceWithNumber();
 
@@ -190,5 +214,7 @@ function explainError(old_second, compass1, compass2, speed = 1 / 6) {
     requestAnimationFrame(() => {
       explainError(old_second, compass1, compass2);
     });
+  } else {
+    return true;
   }
 }
