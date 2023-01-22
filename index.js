@@ -39,14 +39,14 @@ function handleDeviceOrientation(event) {
   if (event.hasOwnProperty("webkitCompassHeading")) {
     // 360 is relative to the y-axis of the phone (12 o'clock)
     // 270 is relative to the x-axis of the phone (3 o'clock)
-    orientationInDegrees = 180 - event.webkitCompassHeading;
+    orientationInDegrees = event.webkitCompassHeading + 180;
   } else {
     // 0 is relative to the y-axis of the phone (12 o'clock)
     // 90 is relative to the x-axis of the phone (3 o'clock)
-    orientationInDegrees = event.alpha - 180;
+    orientationInDegrees = 180 - event.alpha + 360;
   }
-  if (orientationInDegrees < 0) {
-    orientationInDegrees += 360;
+  if (orientationInDegrees > 360) {
+    orientationInDegrees -= 360;
   }
   orientationWrtXAxis = orientationInDegrees / (180 / Math.PI);
 }
