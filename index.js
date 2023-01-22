@@ -22,7 +22,7 @@ function disableButton(button) {
 }
 
 /**
- * Starting from the x-axis of the phone, in the clockwise direction, the orientation of the north direction in radians.
+ * Starting from the x-axis of the phone, in the clockwise direction, the orientation of the south direction in radians.
  */
 let orientationWrtXAxis = null;
 
@@ -39,11 +39,11 @@ function handleDeviceOrientation(event) {
   if (event.hasOwnProperty("webkitCompassHeading")) {
     // 360 is relative to the y-axis of the phone (12 o'clock)
     // 270 is relative to the x-axis of the phone (3 o'clock)
-    orientationInDegrees = 360 - event.webkitCompassHeading;
+    orientationInDegrees = 180 - event.webkitCompassHeading;
   } else {
     // 0 is relative to the y-axis of the phone (12 o'clock)
     // 90 is relative to the x-axis of the phone (3 o'clock)
-    orientationInDegrees = event.alpha - 0;
+    orientationInDegrees = event.alpha - 180;
   }
   if (orientationInDegrees < 0) {
     orientationInDegrees += 360;
