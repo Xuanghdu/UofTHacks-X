@@ -12,6 +12,9 @@ function direction(hour = 0) {
     geolocationCoords.longitude
   ).azimuth;
 
+  azimuth -= Math.PI;
+  azimuth = azimuth < 0 ? azimuth + 2 * Math.PI : azimuth;
+
   console.log("azimuth, ", azimuth);
 
   function getDayOfYear(date) {
