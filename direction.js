@@ -15,6 +15,9 @@ function direction(hour = 0) {
       180) /
     Math.PI;
 
+  azimuth -= Math.PI;
+  azimuth = azimuth >= 0 ? azimuth : azimuth + 2 * Math.PI;
+
   function getDayOfYear(date) {
     var start = new Date(date.getFullYear(), 0, 0);
     var diff = date - start;
