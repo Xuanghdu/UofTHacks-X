@@ -13,6 +13,8 @@ const clockPageIDs = [
 const mainPageIDs = ["introduction-page"].concat(clockPageIDs, ["thank-you-page"]);
 const allPageIDs = ["splash-page"].concat(mainPageIDs);
 
+let currentPageName = "splash-page";
+
 function goToPageWithID(pageID) {
   topContainer.classList.remove("at-clock-pages", ...allPageIDs.map(id => "at-" + id));
   topContainer.classList.add("at-" + pageID);
@@ -24,7 +26,10 @@ function goToPageWithID(pageID) {
     previousButton.classList.add("button-disabled");
   } else {
     previousButton.classList.remove("button-disabled");
-    previousButton.onclick = () => goToPageWithID(mainPageIDs[index - 1]);
+    previousButton.onclick = () => {
+      goToPageWithID(mainPageIDs[index - 1]);
+      clear();
+    };
   }
   if (index === mainPageIDs.length - 1) {
     nextButton.classList.add("button-disabled");
@@ -32,4 +37,5 @@ function goToPageWithID(pageID) {
     nextButton.classList.remove("button-disabled");
     nextButton.onclick = () => goToPageWithID(mainPageIDs[index + 1]);
   }
+  currentPageName = pageID;
 }
