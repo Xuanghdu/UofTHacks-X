@@ -13,6 +13,8 @@ const clockPageIDs = [
 const mainPageIDs = ["introduction-page"].concat(clockPageIDs, ["thank-you-page"]);
 const allPageIDs = ["splash-page"].concat(mainPageIDs);
 
+let currentPageName = "splash-page";
+
 function goToPageWithID(pageID) {
   topContainer.classList.remove("at-clock-pages", ...allPageIDs.map(id => "at-" + id));
   topContainer.classList.add("at-" + pageID);
@@ -32,4 +34,5 @@ function goToPageWithID(pageID) {
     nextButton.disabled = false;
     nextButton.onclick = () => goToPageWithID(mainPageIDs[index + 1]);
   }
+  currentPageName = pageID;
 }
