@@ -2,15 +2,170 @@
 
 <!DOCTYPE html>
 <html lang="en-US">
-  <title>UofTHacks X</title>
-  <link rel="stylesheet" href="style.css" />
-  <body>
-    <canvas id="canvas" style="background-color: #333"> </canvas>
-    <script src="clock.js"></script>
-    <div>
-      <input type="checkbox" id="show"/>
-      <label for="show">Show Compass</label>
+<title>UofTHacks X</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  #top-container {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+  }
+
+  #splash-page,
+  #main-pages {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+  }
+
+  #pages-without-navigation-buttons {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 15vh;
+  }
+
+  #navigation-buttons {
+    position: absolute;
+    top: calc(100% - 15vh);
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+  }
+
+  #introduction-page,
+  #clock-pages,
+  #thank-you-page {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+  }
+
+  #clock-container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 30vh;
+  }
+
+  #pages-without-clock {
+    position: absolute;
+    top: calc(100% - 30vh);
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+  }
+
+  #point-towards-sun-page,
+  #bisector-pointing-south-page,
+  #real-south-direction-page,
+  #error-sun-direction-page,
+  #error-local-time-page,
+  #error-system-error-page {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+  }
+
+  .at-splash-page #main-pages {
+    display: none;
+  }
+
+  .at-introduction-page #splash-page,
+  .at-introduction-page #clock-pages,
+  .at-introduction-page #thank-you-page {
+    display: none;
+  }
+
+  .at-clock-pages #splash-page,
+  .at-clock-pages #introduction-page,
+  .at-clock-pages #thank-you-page {
+    display: none;
+  }
+
+  .at-point-towards-sun-page #pages-without-clock>:not(#point-towards-sun-page),
+  .at-bisector-pointing-south-page #pages-without-clock>:not(#bisector-pointing-south-page),
+  .at-real-south-direction-page #pages-without-clock>:not(#real-south-direction-page),
+  .at-error-sun-direction-page #pages-without-clock>:not(#error-sun-direction-page),
+  .at-error-local-time-page #pages-without-clock>:not(#error-local-time-page),
+  .at-error-system-error-page #pages-without-clock>:not(#error-system-error-page) {
+    display: none;
+  }
+
+  .at-thank-you-page #splash-page,
+  .at-thank-you-page #introduction-page,
+  .at-thank-you-page #clock-pages {
+    display: none;
+  }
+</style>
+<link rel="stylesheet" href="style.css" />
+
+<body>
+  <div id="top-container" , class="at-splash-page">
+    <div id="splash-page">
+      <h2>Splash Page</h2>
+      <button onclick="goToPageWithID('introduction-page')">Start</button>
     </div>
-    <script src="compass.js"></script>
-  </body>
+
+    <div id="main-pages">
+      <div id="pages-without-navigation-buttons">
+        <div id="introduction-page">
+          <h2>Introduction Page</h2>
+        </div>
+
+        <div id="clock-pages">
+          <div id="clock-container">
+            <canvas id="clock-canvas"></canvas>
+          </div>
+
+          <div id="pages-without-clock">
+            <div id="point-towards-sun-page">
+              <h2>Point the hour hand towards the sun</h2>
+            </div>
+            <div id="bisector-pointing-south-page">
+              <h2>The bisector between 12 o'clock and the hour hand points towards the south</h2>
+            </div>
+            <div id="real-south-direction-page">
+              <h2>Show the real south direction</h2>
+            </div>
+            <div id="error-sun-direction-page">
+              <h2>Error: sun direction</h2>
+            </div>
+            <div id="error-local-time-page">
+              <h2>Error: local time</h2>
+            </div>
+            <div id="error-system-error-page">
+              <h2>Error: system error</h2>
+            </div>
+          </div>
+        </div>
+
+        <div id="thank-you-page">
+          <h2>Thank You</h2>
+        </div>
+      </div>
+
+      <div id="navigation-buttons">
+        <button id="previous-button">Previous</button>
+        <button id="next-button">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+
 </html>
