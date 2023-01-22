@@ -56,7 +56,7 @@ async function onSplashStartButtonClicked() {
     const deviceOrientationResponse = await DeviceOrientationEvent.requestPermission();
     if (deviceOrientationResponse !== "granted") {
       disableButton(splashStartButton);
-      return;
+      // return;
     }
   }
   if ("ondeviceorientationabsolute" in window) {
@@ -69,17 +69,17 @@ async function onSplashStartButtonClicked() {
     const geolocationResponse = await Geolocation.requestPermission();
     if (geolocationResponse !== "granted") {
       disableButton(splashStartButton);
-      return;
+      // return;
     }
   }
   if (!navigator.geolocation) {
     disableButton(splashStartButton);
-    return;
+    // return;
   }
-  const geolocation = await new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
-  });
-  geolocationCoords = geolocation.coords;
+  // const geolocation = await new Promise((resolve, reject) => {
+  //   navigator.geolocation.getCurrentPosition(resolve, reject);
+  // });
+  // geolocationCoords = geolocation.coords;
   goToPageWithID('introduction-page');
 }
 
