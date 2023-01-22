@@ -210,30 +210,56 @@ function explainError(old_second, compass1, compass2, speed = 1 / 6) {
       ? 60 + new_second - old_second
       : new_second - old_second;
 
-  drawHand(ctx, compass1, radius, radius * 0.07, "square", true);
+  drawHand(ctx, compass1, radius, Math.max(radius * 0.01, 1), "square", true);
 
-  ctx.beginPath();
-  ctx.arc(
-    0,
-    0,
-    radius * 0.95,
-    compass1 - Math.PI / 2,
-    compass1 + second * Math.PI * speed - Math.PI / 2
-  );
-  ctx.lineTo(0, 0);
-  ctx.fillStyle = "blue";
-  ctx.fill();
+  if (compass1 < compass2) {
+    ctx.beginPath();
+    ctx.arc(
+      0,
+      0,
+      radius * 0.95,
+      compass1 - Math.PI / 2,
+      compass1 + second * Math.PI * speed - Math.PI / 2
+    );
+    ctx.lineTo(0, 0);
+    ctx.fillStyle = "blue";
+    ctx.fill();
 
-  drawHand(
-    ctx,
-    compass1 + second * Math.PI * speed,
-    radius,
-    radius * 0.07,
-    "square",
-    true
-  );
+    drawHand(
+      ctx,
+      compass1 + second * Math.PI * speed,
+      radius,
+      Math.max(radius * 0.01, 1),
+      "square",
+      true
+    );
+  } else {
+    ctx.beginPath();
+    ctx.arc(
+      0,
+      0,
+      radius * 0.95,
+      compass1 - second * Math.PI * speed - Math.PI / 2,
+      compass1 - Math.PI / 2
+    );
+    ctx.lineTo(0, 0);
+    ctx.fillStyle = "blue";
+    ctx.fill();
 
-  if (compass1 + second * Math.PI * speed < compass2) {
+    drawHand(
+      ctx,
+      compass1 - second * Math.PI * speed,
+      radius,
+      Math.max(radius * 0.01, 1),
+      "square",
+      true
+    );
+  }
+
+  if (
+    (compass1 < compass2 && compass1 + second * Math.PI * speed < compass2) ||
+    (compass1 >= compass2 && compass1 - second * Math.PI * speed >= compass2)
+  ) {
     requestAnimationFrame(() => {
       explainError(old_second, compass1, compass2);
     });
