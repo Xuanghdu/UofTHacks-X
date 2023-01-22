@@ -6,17 +6,16 @@
 // };
 
 function direction(hour = 0) {
-  var azimuth =
-    (SunCalc.getPosition(
-      new Date(),
-      geolocationCoords.latitude,
-      geolocationCoords.longitude
-    ).azimuth *
-      180) /
-    Math.PI;
+  var azimuth = SunCalc.getPosition(
+    new Date(),
+    geolocationCoords.latitude,
+    geolocationCoords.longitude
+  ).azimuth;
 
   azimuth -= Math.PI;
   azimuth = azimuth >= 0 ? azimuth : azimuth + 2 * Math.PI;
+
+  console.log("azimuth, ", azimuth);
 
   function getDayOfYear(date) {
     var start = new Date(date.getFullYear(), 0, 0);
@@ -43,7 +42,11 @@ function direction(hour = 0) {
 
   function getCurrentUTCTime() {
     var date = new Date();
-    return date.getUTCHours() + date.getUTCMinutes() / 60 + date.getUTCSeconds() / 3600;
+    return (
+      date.getUTCHours() +
+      date.getUTCMinutes() / 60 +
+      date.getUTCSeconds() / 3600
+    );
     // return [hour, min, sec];
   }
 
@@ -60,5 +63,5 @@ function direction(hour = 0) {
   compass_local_time = azimuth - apparentSolarTime / 2;
   compass_true = orientationWrtXAxis;
 
-  return [compass_sun_direction, compass_local_time, compass_true]
+  return [compass_sun_direction, compass_local_time, compass_true];
 }
