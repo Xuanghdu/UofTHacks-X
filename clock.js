@@ -19,6 +19,8 @@ var now_3 = -1;
 var second_3;
 var flag_3 = false;
 
+var not_init = true;
+
 window.requestAnimationFrame(draw);
 
 function clear() {
@@ -30,44 +32,65 @@ function clear() {
 
   now_3 = -1;
   flag_3 = false;
+
+  not_init = true;
 }
 
 function draw() {
-  let [hour, minute, second] = calcTime();
-  compass_measured = hour/2;
-
-  [compass_sun_direction, compass_local_time, compass_true] = direction(hour);
-
   if (!clockPageIDs.slice(-3).includes(currentPageName)) {
     clock();
-  } else if (currentPageName === "error-sun-direction-page" && !flag_1) {
-    if (now_1 === -1) {
-      now_1 = new Date();
-      second_1 = now_1.getSeconds() + now_1.getMilliseconds() / 1000;
-    }
-    requestAnimationFrame(() => {
-      flag_1 = explainError(second_1, compass_measured, compass_sun_direction);
-    });
-  } else if (currentPageName === "error-local-time-page" && !flag_2) {
-    if (now_2 === -1) {
-      now_2 = new Date();
-      second_2 = now_2.getSeconds() + now_2.getMilliseconds() / 1000;
-    }
-    requestAnimationFrame(() => {
-      flag_2 = explainError(
-        second_2,
+  } else {
+    if (not_init) {
+      let [hour, minute, second] = calcTime();
+
+      compass_measured = hour / 2;
+
+      [compass_sun_direction, compass_local_time, compass_true] =
+        direction(hour);
+
+      console.log(
+        compass_measured,
         compass_sun_direction,
-        compass_local_time
+        compass_local_time,
+        compass_true
       );
-    });
-  } else if (currentPageName === "error-system-error-page" && !flag_3) {
-    if (now_3 === -1) {
-      now_3 = new Date();
-      second_3 = now_3.getSeconds() + now_3.getMilliseconds() / 1000;
+
+      not_init = false;
     }
-    requestAnimationFrame(() => {
-      flag_3 = explainError(second_3, compass_local_time, compass_true);
-    });
+
+    if (currentPageName === "error-sun-direction-page" && !flag_1) {
+      if (now_1 === -1) {
+        now_1 = new Date();
+        second_1 = now_1.getSeconds() + now_1.getMilliseconds() / 1000;
+      }
+      requestAnimationFrame(() => {
+        flag_1 = explainError(
+          second_1,
+          compass_measured,
+          compass_sun_direction
+        );
+      });
+    } else if (currentPageName === "error-local-time-page" && !flag_2) {
+      if (now_2 === -1) {
+        now_2 = new Date();
+        second_2 = now_2.getSeconds() + now_2.getMilliseconds() / 1000;
+      }
+      requestAnimationFrame(() => {
+        flag_2 = explainError(
+          second_2,
+          compass_sun_direction,
+          compass_local_time
+        );
+      });
+    } else if (currentPageName === "error-system-error-page" && !flag_3) {
+      if (now_3 === -1) {
+        now_3 = new Date();
+        second_3 = now_3.getSeconds() + now_3.getMilliseconds() / 1000;
+      }
+      requestAnimationFrame(() => {
+        flag_3 = explainError(second_3, compass_local_time, compass_true);
+      });
+    }
   }
   window.requestAnimationFrame(draw);
 }
@@ -177,7 +200,6 @@ function drawHand(ctx, pos, length, width, lineCap = "round", dotted = false) {
 }
 
 function explainError(old_second, compass1, compass2, speed = 1 / 6) {
-  console.log(old_second, compass1, compass2);
   ctx.clearRect(-dim / 2, -dim / 2, dim, dim);
   drawClockFaceWithNumber();
 
