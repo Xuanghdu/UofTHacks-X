@@ -5,15 +5,15 @@
 //   accuracy: 1000,
 // };
 
-function direction(hour = 0) {
-  var azimuth = SunCalc.getPosition(
+function direction(now, hour = 0) {
+  let azimuth = SunCalc.getPosition(
     new Date(),
     geolocationCoords.latitude,
     geolocationCoords.longitude
-  ).azimuth;
-
-  azimuth -= Math.PI;
-  azimuth = azimuth < 0 ? azimuth + 2 * Math.PI : azimuth;
+  ).azimuth - Math.PI;
+  if (azimuth < 0) {
+    azimuth += Math.PI * 2;
+  }
 
   console.log("azimuth, ", azimuth);
 
@@ -58,18 +58,14 @@ function direction(hour = 0) {
     getEquationOfTime() / 60;
 
   // apparentSolarTime: is the true solar time in hours
-
-  compass_sun_direction = azimuth - hour / 2;
-  compass_local_time = azimuth - apparentSolarTime / 2;
-  compass_true = orientationWrtXAxis;
-
-  compass_sun_direction = compass_sun_direction < 0 ? compass_sun_direction + 2 * Math.PI : compass_sun_direction;
-  compass_local_time = compass_local_time < 0 ? compass_local_time + 2 * Math.PI : compass_local_time;
-  compass_true = compass_true < 0 ? compass_true + 2 * Math.PI : compass_true;
-
-  compass_sun_direction = compass_sun_direction > 2 * Math.PI ? compass_sun_direction - 2 * Math.PI : compass_sun_direction;
-  compass_local_time = compass_local_time > 2 * Math.PI ? compass_local_time - 2 * Math.PI : compass_local_time;
-  compass_true = compass_true > 2 * Math.PI ? compass_true - 2 * Math.PI : compass_true;
+  let compass_sun_direction = null;
+  if (now.getHours() < 12) {
+    compass_sun_direction = azimuth - hour / 2 + Math.PI - compassHeading
+  } else {
+    compass_sun_direction = azimuth - hour / 2 - compassHeading;
+  }
+  let compass_local_time = azimuth + (1 - apparentSolarTime / 12) * Math.PI - compassHeading;
+  let compass_true = Math.PI - compassHeading;
 
   return [compass_sun_direction, compass_local_time, compass_true];
 }

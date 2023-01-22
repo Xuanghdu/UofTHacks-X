@@ -36,17 +36,26 @@ function clear() {
   not_init = true;
 }
 
+let compass_measured = null;
+
 function draw() {
   if (!clockPageIDs.slice(-3).includes(currentPageName)) {
     clock();
   } else {
     if (not_init) {
-      let [hour, minute, second] = calcTime();
+      let now = new Date();
+      let [hour, minute, second] = calcTime(now);
 
-      compass_measured = hour / 2;
+      if (now.getHours() < 12) {
+        // Morning
+        compass_measured = (Math.PI * 2 + hour) / 2;
+      } else {
+        // Afternoon
+        compass_measured = hour / 2;
+      }
 
       [compass_sun_direction, compass_local_time, compass_true] =
-        direction(hour);
+        direction(now, hour);
 
       console.log(
         compass_measured,
@@ -67,7 +76,8 @@ function draw() {
         flag_1 = explainError(
           second_1,
           compass_measured,
-          compass_sun_direction
+          compass_sun_direction,
+          "rgba(255, 32, 32, 0.5)"
         );
       });
     } else if (currentPageName === "error-local-time-page" && !flag_2) {
@@ -79,7 +89,8 @@ function draw() {
         flag_2 = explainError(
           second_2,
           compass_sun_direction,
-          compass_local_time
+          compass_local_time,
+          "rgba(32, 255, 32, 0.5)"
         );
       });
     } else if (currentPageName === "error-system-error-page" && !flag_3) {
@@ -88,15 +99,19 @@ function draw() {
         second_3 = now_3.getSeconds() + now_3.getMilliseconds() / 1000;
       }
       requestAnimationFrame(() => {
-        flag_3 = explainError(second_3, compass_local_time, compass_true);
+        flag_3 = explainError(
+          second_3,
+          compass_local_time,
+          compass_true,
+          "rgba(32, 32, 255, 0.5)"
+        );
       });
     }
   }
   window.requestAnimationFrame(draw);
 }
 
-function calcTime() {
-  var now = new Date();
+function calcTime(now) {
   var hour = now.getHours();
   var minute = now.getMinutes();
   var second = now.getSeconds();
@@ -164,7 +179,8 @@ function clock() {
   ctx.clearRect(-dim / 2, -dim / 2, dim, dim);
   drawClockFaceWithNumber();
 
-  let [hour, minute, second] = calcTime();
+  let now = new Date()
+  let [hour, minute, second] = calcTime(now);
 
   drawTime(ctx, radius, hour, minute, second);
 
@@ -177,17 +193,27 @@ function clock() {
       // draw the dotted line to 12 o'clock
       drawHand(ctx, 0, radius, radius * 0.01, "square", true);
       // draw the line bisecting 12 o'clock and hour hand
-      drawHand(ctx, hour / 2, radius, radius * 0.02, "square");
+      if (now.getHours() < 12) {
+        // Morning
+        bisect = (Math.PI * 2 + hour) / 2;
+      } else {
+        // Afternoon
+        bisect = hour / 2;
+      }
+      drawHand(ctx, bisect, radius, radius * 0.02, "square");
     }
 
     if (currentPageName === "real-south-direction-page") {
       [compass_sun_direction, compass_local_time, compass_true] =
-        direction(hour);
+        direction(now, hour);
       drawHand(ctx, compass_true, radius, radius * 0.02, "square");
     }
   }
 }
 
+/**
+ * @param pos Clockwise angle from the 12 o'clock direction, in radians.
+ */
 function drawHand(ctx, pos, length, width, lineCap = "round", dotted = false) {
   if (dotted) {
     ctx.setLineDash([20, 15]);
@@ -205,7 +231,7 @@ function drawHand(ctx, pos, length, width, lineCap = "round", dotted = false) {
   }
 }
 
-function explainError(old_second, compass1, compass2, speed = 1 / 6) {
+function explainError(old_second, compass1, compass2, fillColor, speed = 1 / 6) {
   if (compass2 - compass1 > Math.PI) {
     compass2 -= 2 * Math.PI;
   } else if (compass2 - compass1 < -Math.PI) {
@@ -233,7 +259,7 @@ function explainError(old_second, compass1, compass2, speed = 1 / 6) {
       compass1 + second * Math.PI * speed - Math.PI / 2
     );
     ctx.lineTo(0, 0);
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = fillColor;
     ctx.fill();
 
     drawHand(
@@ -254,7 +280,7 @@ function explainError(old_second, compass1, compass2, speed = 1 / 6) {
       compass1 - Math.PI / 2
     );
     ctx.lineTo(0, 0);
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = fillColor;
     ctx.fill();
 
     drawHand(
@@ -272,7 +298,7 @@ function explainError(old_second, compass1, compass2, speed = 1 / 6) {
     (compass1 >= compass2 && compass1 - second * Math.PI * speed >= compass2)
   ) {
     requestAnimationFrame(() => {
-      explainError(old_second, compass1, compass2);
+      explainError(old_second, compass1, compass2, fillColor);
     });
   } else {
     return true;

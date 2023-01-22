@@ -22,9 +22,11 @@ function disableButton(button) {
 }
 
 /**
- * Starting from the x-axis of the phone, in the clockwise direction, the orientation of the south direction in radians.
+ * Start from north and rotate clockwise, the angle towards the phone's heading direction in radians.
  */
-let orientationWrtXAxis = null;
+let compassHeading = null;
+
+let deviceOrientationEvent = null;
 
 /**
  * The following 3 properties of the object are of interest.
@@ -35,20 +37,14 @@ let orientationWrtXAxis = null;
 let geolocationCoords = null;
 
 function handleDeviceOrientation(event) {
-  let orientationInDegrees;
-  if (event.hasOwnProperty("webkitCompassHeading")) {
-    // 360 is relative to the y-axis of the phone (12 o'clock)
-    // 270 is relative to the x-axis of the phone (3 o'clock)
-    orientationInDegrees = 180 - event.webkitCompassHeading;
+  deviceOrientationEvent = event;
+  let headingInDegrees;
+  if ("webkitCompassHeading" in event) {
+    headingInDegrees = event.webkitCompassHeading;
   } else {
-    // 0 is relative to the y-axis of the phone (12 o'clock)
-    // 90 is relative to the x-axis of the phone (3 o'clock)
-    orientationInDegrees = event.alpha - 180;
+    headingInDegrees = 360 - event.alpha;
   }
-  if (orientationInDegrees < 0) {
-    orientationInDegrees += 360;
-  }
-  orientationWrtXAxis = orientationInDegrees / (180 / Math.PI);
+  compassHeading = headingInDegrees / (180 / Math.PI);
 }
 
 async function onSplashStartButtonClicked() {
