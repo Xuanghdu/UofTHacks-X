@@ -37,7 +37,7 @@ let geolocationCoords = null;
 function handleDeviceOrientation(event) {
   let orientationInDegrees;
   if (event.hasOwnProperty("webkitCompassHeading")) {
-    orientationInDegrees = event.webkitCompassHeading + 180;
+    orientationInDegrees = 180 - event.webkitCompassHeading + 360
   } else {
     orientationInDegrees = event.alpha + 180;
   }
