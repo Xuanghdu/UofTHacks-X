@@ -21,15 +21,15 @@ function goToPageWithID(pageID) {
   }
   const index = mainPageIDs.indexOf(pageID);
   if (index === 0) {
-    previousButton.disabled = true;
+    previousButton.classList.add("button-disabled");
   } else {
-    previousButton.disabled = false;
+    previousButton.classList.remove("button-disabled");
     previousButton.onclick = () => goToPageWithID(mainPageIDs[index - 1]);
   }
   if (index === mainPageIDs.length - 1) {
-    nextButton.disabled = true;
+    nextButton.classList.add("button-disabled");
   } else {
-    nextButton.disabled = false;
+    nextButton.classList.remove("button-disabled");
     nextButton.onclick = () => goToPageWithID(mainPageIDs[index + 1]);
   }
 }
