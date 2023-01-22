@@ -206,6 +206,11 @@ function drawHand(ctx, pos, length, width, lineCap = "round", dotted = false) {
 }
 
 function explainError(old_second, compass1, compass2, speed = 1 / 6) {
+  if (compass2 - compass1 > Math.PI) {
+    compass2 -= 2 * Math.PI;
+  } else if (compass2 - compass1 < -Math.PI) {
+    compass2 += 2 * Math.PI;
+  }
   ctx.clearRect(-dim / 2, -dim / 2, dim, dim);
   drawClockFaceWithNumber();
 
