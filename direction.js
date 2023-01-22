@@ -1,3 +1,5 @@
+if (currentPageName !== "splash-page") {
+
 console.log(geolocationCoords)
 
 var azimuth = SunCalc.getPosition(new Date(), geolocationCoords.latitude, geolocationCoords.longitude).azimuth * 180 / Math.PI;
@@ -28,3 +30,5 @@ var utcTime = new Date().UTC();
 var apparentSolarTime = geolocationCoords.longitude / 180 * 12 + utcTime + getEquationOfTime()
 
 console.log(apparentSolarTime)
+
+}
