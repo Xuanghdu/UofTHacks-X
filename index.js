@@ -26,7 +26,7 @@ function goToPageWithID(pageID) {
     previousButton.disabled = true;
   } else {
     previousButton.disabled = false;
-    previousButton.onclick = () => goToPageWithID(mainPageIDs[index - 1]);
+    previousButton.onclick = () => { goToPageWithID(mainPageIDs[index - 1]); clear(); };
   }
   if (index === mainPageIDs.length - 1) {
     nextButton.disabled = true;
